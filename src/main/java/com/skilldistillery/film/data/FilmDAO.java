@@ -11,7 +11,7 @@ public interface FilmDAO {
 
 	boolean save(Film film);
 
-	Actor findActorById(int actorId);
+	public Actor findActorById(int actorId) throws SQLException;
 
 	List<Film> findFilmByKeyword(String userKeyword);
 

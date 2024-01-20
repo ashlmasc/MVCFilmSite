@@ -52,12 +52,12 @@ public class FilmDAOImpl implements FilmDAO {
 				film.setRating(filmResult.getString("rating"));
 				film.setSpecialFeatures(filmResult.getString("special_features"));
 
-//			film.setActors(findActorsByFilmId(filmId));
-//
-//			List<String> categories = findFilmCategories(filmId);
-//			film.setCategories(categories);
-//
-//			film.setLanguage(filmResult.getString("language_name"));
+				film.setActors(findActorsByFilmId(filmId));
+
+				List<String> categories = findFilmCategories(filmId);
+				film.setCategories(categories);
+
+				film.setLanguage(filmResult.getString("language_name"));
 //
 //			List<InventoryItem> inventoryItems = findInventoryByFilmId(filmId);
 				// film.setInventoryItems(inventoryItems);
@@ -104,7 +104,7 @@ public class FilmDAOImpl implements FilmDAO {
 				film.setRating(resultSet.getString("rating"));
 				film.setSpecialFeatures(resultSet.getString("special_features"));
 
-				// film.setActors(findActorsByFilmId(film.getId()));
+				 //film.setActors(findActorById(film.getId()));
 
 				foundFilms.add(film);
 			}
@@ -115,6 +115,24 @@ public class FilmDAOImpl implements FilmDAO {
 
 		return foundFilms;
 
+	}
+	
+	public List<String> findFilmCategories(int filmId) throws SQLException {
+		List<String> categories = new ArrayList<>();
+		Connection connection = DriverManager.getConnection(URL, USER, PWD);
+		String sql = "SELECT category.name FROM category JOIN film_category ON category.id = film_category.category_id WHERE film_category.film_id = ?";
+
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setInt(1, filmId);
+		ResultSet resultSet = statement.executeQuery();
+		while (resultSet.next()) {
+			categories.add(resultSet.getString("name"));
+		}
+		resultSet.close();
+		statement.close();
+		connection.close();
+
+		return categories;
 	}
 
 	@Override
@@ -181,32 +199,44 @@ public class FilmDAOImpl implements FilmDAO {
 	
 	
 
-	@Override
-	public Actor findActorById(int actorId) {
+	public Actor findActorById(int actorId) throws SQLException {
 		Actor actor = null;
-		String user = "student";
-		String pass = "student";
 
-		try {
-			Connection conn = DriverManager.getConnection(URL, user, pass);
+		Connection connection = DriverManager.getConnection(URL, USER, PWD);
 
-			String sql = "SELECT * FROM actor WHERE id = ?";
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, actorId);
-			ResultSet actorResult = ps.executeQuery();
-			if (actorResult.next()) {
-				int id = actorResult.getInt("id");
-				String firstName = actorResult.getString("first_name");
-				String lastName = actorResult.getString("last_name");
-
-				actor = new Actor(id, firstName, lastName);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		String sql = "SELECT id, first_name, last_name FROM actor WHERE id = ?";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setInt(1, actorId);
+		ResultSet actorResult = statement.executeQuery();
+		if (actorResult.next()) {
+			actor = new Actor(actorResult.getInt("id"), actorResult.getString("first_name"),
+					actorResult.getString("last_name"));
 		}
-
+		actorResult.close();
+		statement.close();
+		connection.close();
 		return actor;
+	}
+	
+	public List<Actor> findActorsByFilmId(int filmId) throws SQLException {
+		List<Actor> actors = new ArrayList<>();
+
+		Connection connection = DriverManager.getConnection(URL, USER, PWD);
+
+		String sql = "SELECT actor.id, actor.first_name, actor.last_name "
+				+ "FROM actor JOIN film_actor ON actor.id = film_actor.actor_id " + "WHERE film_actor.film_id = ?";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setInt(1, filmId);
+		ResultSet resultSet = statement.executeQuery();
+		while (resultSet.next()) {
+			Actor actor = new Actor(resultSet.getInt("id"), resultSet.getString("first_name"),
+					resultSet.getString("last_name"));
+			actors.add(actor);
+		}
+		resultSet.close();
+		statement.close();
+		connection.close();
+		return actors;
 	}
 	
 	public Film createFilm(Film film) throws SQLException {

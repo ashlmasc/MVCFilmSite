@@ -16,14 +16,13 @@ public class Film {
     private double replacementCost;
     private String rating;
     private String specialFeatures;
+    private List<Actor> actors;
     private String language;
     private List<String> categories;
 
 	public Film() {
 
 	}
-
-	
 
 	public Film(int id, String title, String description, Integer releaseYear, int languageId, int rentalDuration,
 			double rentalRate, Integer length, double replacementCost, String rating, String specialFeatures,
@@ -134,7 +133,14 @@ public class Film {
 		this.specialFeatures = specialFeatures;
 	}
 
-	
+
+	public List<Actor> getActors() {
+		return actors;
+	}
+
+	public void setActors(List<Actor> actors) {
+		this.actors = actors;
+	}
 
 	public String getLanguage() {
 		return language;

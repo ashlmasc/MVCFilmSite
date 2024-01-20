@@ -15,4 +15,10 @@ public interface FilmDAO {
 
 	List<Film> findFilmByKeyword(String userKeyword);
 
+	boolean updateFilm(Film film);
+	
+	public Film createFilm(Film film) throws SQLException;
+
+	boolean deleteFilm(int filmId) throws SQLException;
+
 }

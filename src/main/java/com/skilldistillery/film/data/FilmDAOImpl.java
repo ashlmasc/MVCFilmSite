@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,13 +72,13 @@ public class FilmDAOImpl implements FilmDAO {
 		}
 		return film;
 	}
-	
+
 	@Override
-	public List<Film> findFilmByKeyword(String userKeyword){
+	public List<Film> findFilmByKeyword(String userKeyword) {
 		List<Film> foundFilms = new ArrayList<Film>();
 		String user = "student";
 		String pass = "student";
-		
+
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, pass);
 
@@ -103,7 +104,7 @@ public class FilmDAOImpl implements FilmDAO {
 				film.setRating(resultSet.getString("rating"));
 				film.setSpecialFeatures(resultSet.getString("special_features"));
 
-				//film.setActors(findActorsByFilmId(film.getId()));
+				// film.setActors(findActorsByFilmId(film.getId()));
 
 				foundFilms.add(film);
 			}
@@ -115,6 +116,70 @@ public class FilmDAOImpl implements FilmDAO {
 		return foundFilms;
 
 	}
+
+	@Override
+	public boolean updateFilm(Film film) {
+		Connection conn = null;
+		String user = "student";
+		String pass = "student";
+
+		try {
+			conn = DriverManager.getConnection(URL, user, pass);
+			conn.setAutoCommit(false);
+			String sql = "UPDATE film SET title = ?, description = ?, release_year = ?, language_id = ?, rental_duration = ?, rental_rate = ?, length = ?, replacement_cost = ?, rating = ?, special_features = ? WHERE id = ?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, film.getTitle());
+			statement.setString(2, film.getDescription());
+			if (film.getReleaseYear() != null) {
+				statement.setInt(3, film.getReleaseYear());
+			} else {
+				statement.setNull(3, java.sql.Types.INTEGER);
+			}
+			statement.setInt(4, film.getLanguageId());
+			statement.setInt(5, film.getRentalDuration());
+			statement.setDouble(6, film.getRentalRate());
+			if (film.getLength() != null) {
+				statement.setInt(7, film.getLength());
+			} else {
+				statement.setNull(7, java.sql.Types.INTEGER);
+			}
+			statement.setDouble(8, film.getReplacementCost());
+			statement.setString(9, film.getRating());
+			statement.setString(10, film.getSpecialFeatures());
+			statement.setInt(11, film.getId());
+			int updateCount = statement.executeUpdate();
+			if (updateCount == 1) {
+				conn.commit();
+			}
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+			if (conn != null) {
+				try {
+					conn.rollback();
+				} // ROLLBACK TRANSACTION ON ERROR
+				catch (SQLException sqle2) {
+					System.err.println("Error trying to rollback");
+				}
+			}
+			return false;
+		}
+		return true;
+
+	}
+	
+	@Override
+    public boolean deleteFilm(int filmId) throws SQLException {
+        String sql = "DELETE FROM film WHERE id = ?";
+        try (Connection connection = DriverManager.getConnection(URL, USER, PWD);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, filmId);
+
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
+        }
+    }
+	
+	
 
 	@Override
 	public Actor findActorById(int actorId) {
@@ -142,6 +207,66 @@ public class FilmDAOImpl implements FilmDAO {
 		}
 
 		return actor;
+	}
+	
+	public Film createFilm(Film film) throws SQLException {
+		String sql = "INSERT INTO film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features) VALUES (?, ?, ?, 1, ?, ?, ?, ?, ?, ?)";
+
+		try (Connection connnnection = DriverManager.getConnection(URL, USER, PWD);
+				PreparedStatement statement = connnnection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+			statement.setString(1, film.getTitle());
+
+			if (film.getDescription() != null) {
+				statement.setString(2, film.getDescription());
+			} else {
+				statement.setNull(2, java.sql.Types.VARCHAR);
+			}
+
+			if (film.getReleaseYear() != null) {
+				statement.setInt(3, film.getReleaseYear());
+			} else {
+				statement.setNull(3, java.sql.Types.INTEGER);
+			}
+
+			
+			statement.setInt(4, film.getRentalDuration());
+			statement.setDouble(5, film.getRentalRate());
+
+
+			if (film.getLength() != null) {
+				statement.setInt(6, film.getLength()); 
+			} else {
+				statement.setNull(6, java.sql.Types.INTEGER);
+			}
+			statement.setDouble(7, film.getReplacementCost());
+
+			if (film.getRating() != null) {
+				statement.setString(8, film.getRating());
+			} else {
+				statement.setNull(8, java.sql.Types.VARCHAR);
+			}
+
+			if (film.getSpecialFeatures() != null) {
+				statement.setString(9, film.getSpecialFeatures());
+			} else {
+				statement.setNull(9, java.sql.Types.VARCHAR);
+			}
+
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				return null;
+			}
+
+			try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+				if (generatedKeys.next()) {
+					film.setId(generatedKeys.getInt(1));
+				} else {
+					throw new SQLException("Creating film failed, no ID obtained.");
+				}
+			}
+		}
+		return film;
 	}
 
 	@Override

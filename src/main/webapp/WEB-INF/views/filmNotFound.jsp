@@ -11,6 +11,9 @@
 </head>
 <body>
     <h2>Film Not Found</h2>
-    <p>${errorMessage}</p>
+    <p>${errorMessage}</p><br>
+    
+    
+    
 </body>
 </html>

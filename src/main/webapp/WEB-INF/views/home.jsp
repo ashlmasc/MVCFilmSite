@@ -4,10 +4,17 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Home</title>
 </head>
-<body>
- some stuff
+<body>	
+	
+	<h3>Film By ID</h3>
+	<form action="viewFilm.do">
+		<input type="text" name="id"  /> 
+		<input type="submit" value="Find Film" />
+	</form>
+	
+	
 </body>
 
 

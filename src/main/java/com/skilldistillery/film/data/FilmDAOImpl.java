@@ -73,7 +73,7 @@ public class FilmDAOImpl implements FilmDAO {
 	}
 	
 	@Override
-	public List<Film> findFilmsByKeyword(String userKeyword){
+	public List<Film> findFilmByKeyword(String userKeyword){
 		List<Film> foundFilms = new ArrayList<Film>();
 		String user = "student";
 		String pass = "student";
@@ -87,25 +87,25 @@ public class FilmDAOImpl implements FilmDAO {
 			String userQuery = "%" + userKeyword + "%";
 			ps.setString(1, userQuery);
 			ps.setString(2, userQuery);
-			ResultSet filmResult = ps.executeQuery();
-			while (filmResult.next()) {
-				int id = filmResult.getInt("id");
-				String title = filmResult.getString("title");
-				String desc = filmResult.getString("description");
-				int releaseYear = filmResult.getInt("release_year");
-				int languageId = filmResult.getInt("language_id");
-				int rentalDuration = filmResult.getInt("rental_duration");
-				double rentalRate = filmResult.getDouble("rental_rate");
-				Integer length = filmResult.getInt("length");
-				double replacementCost = filmResult.getDouble("replacement_cost");
-				String rating = filmResult.getString("rating");
-				List<String> categories = filmResult.getString("special_features");
+			ResultSet resultSet = ps.executeQuery();
+			while (resultSet.next()) {
+				Film film = new Film();
 
-				Film film = new Film(id, title, desc, releaseYear, languageId, rentalDuration, rentalRate, length,
-						replacementCost, rating, categories);
-//				film.setFilmActors(findActorsByFilmId(film.getId()));
+				film.setId(resultSet.getInt("id"));
+				film.setTitle(resultSet.getString("title"));
+				film.setDescription(resultSet.getString("description"));
+				film.setReleaseYear(resultSet.getInt("release_year"));
+				film.setLanguageId(resultSet.getInt("language_id"));
+				film.setRentalDuration(resultSet.getInt("rental_duration"));
+				film.setRentalRate(resultSet.getDouble("rental_rate"));
+				film.setLength(resultSet.getInt("length"));
+				film.setReplacementCost(resultSet.getDouble("replacement_cost"));
+				film.setRating(resultSet.getString("rating"));
+				film.setSpecialFeatures(resultSet.getString("special_features"));
+
+				//film.setActors(findActorsByFilmId(film.getId()));
+
 				foundFilms.add(film);
-
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

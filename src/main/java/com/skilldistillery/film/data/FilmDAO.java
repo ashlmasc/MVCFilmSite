@@ -13,6 +13,6 @@ public interface FilmDAO {
 
 	Actor findActorById(int actorId);
 
-	List<Film> findFilmsByKeyword(String userKeyword);
+	List<Film> findFilmByKeyword(String userKeyword);
 
 }

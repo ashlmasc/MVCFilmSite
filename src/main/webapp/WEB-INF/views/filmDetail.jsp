@@ -46,5 +46,8 @@
          </p>
 
     </div>
+    
+<!-- added link to delete film from database    -->
+    <a href="deleteFilm.do?id=${film.id}">Delete this film</a>
 </body>
 </html>

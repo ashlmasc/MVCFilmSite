@@ -1,5 +1,7 @@
 package com.skilldistillery.film.controllers;
 
+import java.sql.SQLException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,4 +57,17 @@ public class FilmController {
 
         return "redirect:/films"; // Redirect after successful operation
     }
+	 
+	// new code for delete functionality
+	@GetMapping("/deleteFilm.do")
+	public String deleteFilm(@RequestParam("id") int filmId, Model model) throws SQLException {
+	    boolean isDeleted = filmDAO.deleteFilm(filmId);
+	    if (!isDeleted) {
+	        model.addAttribute("deleteError", "Film could not be deleted.");
+	        return "deleteFailure"; // JSP page for delete failure
+	    }
+	    return "redirect:/films"; // Redirect to list of films after deletion
+	}
+	
+	
 }

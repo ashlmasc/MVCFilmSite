@@ -66,7 +66,7 @@
 	</div>
 	
 	<!-- Back to Home Page button -->
-        <form action="home.do" method="GET">
+        <form action="." method="GET">
             <input type="submit" value="Back to Home" />
         </form>
 

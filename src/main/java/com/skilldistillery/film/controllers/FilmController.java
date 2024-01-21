@@ -30,7 +30,7 @@ public class FilmController {
 	@Autowired
 	private FilmDAO filmDAO;
 	
-	@RequestMapping("/home.do")
+	@RequestMapping("/")
 	public String home() {
 		return "home";
 	}

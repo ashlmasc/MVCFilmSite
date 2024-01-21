@@ -65,7 +65,9 @@
                  ${actor.firstName} ${actor.lastName}, 
              </c:forEach>
 				</p>
-
+<br>
+<br>
+<br>
 			</div>
 			</c:if>
 	</c:forEach>

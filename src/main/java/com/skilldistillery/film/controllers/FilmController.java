@@ -1,5 +1,8 @@
 package com.skilldistillery.film.controllers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.skilldistillery.film.data.FilmDAO;
+import com.skilldistillery.film.entities.Actor;
 import com.skilldistillery.film.entities.Film;
 
 @Controller
@@ -35,8 +39,19 @@ public class FilmController {
 	    return "filmDetail";  // added prefix/suffix in servlet so just name
 	}
 	
-	@PostMapping("/addFilm")
-    public String addFilm(@ModelAttribute("film") Film film, BindingResult result, Model model) {
+	//Mace code:
+	
+	@GetMapping("/filmForm.do")
+	public String showFilmForm(Model model) {
+		model.addAttribute("film", new Film());
+		return "filmForm";
+	}
+	
+	//end of Mace code.
+	
+	@PostMapping("/addFilm.do")
+	public String addFilm(@ModelAttribute("film") Film film, BindingResult result, Model model, //Mace Code
+            @RequestParam(value = "actors", required = false) List<String> actorNames) { //end of Mace Code
         // Validation logic
         if (film.getTitle() == null || film.getTitle().isEmpty()) {
             result.rejectValue("title", "error.film", "Title is required.");
@@ -46,6 +61,20 @@ public class FilmController {
         if (result.hasErrors()) {
             return "filmForm"; // added prefix/suffix in servlet so just name
         }
+        
+        //Mace code:
+        List<Actor> actors = actorNames.stream()
+                .map(actorName -> {
+                    String[] names = actorName.split(" ");
+                    return new Actor(0, names[0], names[1]);
+                })
+                .collect(Collectors.toList());
+
+        film.setActors(actors);
+        
+        System.out.println("Received film: " + film);
+        
+        //end of Mace code.
 
         boolean isSaved = filmDAO.save(film); // Save the film
         if (!isSaved) {

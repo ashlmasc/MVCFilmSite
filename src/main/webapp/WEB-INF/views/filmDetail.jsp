@@ -10,13 +10,10 @@
 <title>Film Details</title>
 </head>
 <body>
-	<!--     <h2>Film Details</h2> -->
-	<%--     <p>Title: ${film.title}</p> --%>
-	<%--     <p>Description: ${film.description}</p> --%>
-	<!-- Display other film details -->
 
 	<h2>Film Details</h2>
 	<div>
+	 	<p><strong>ID:</strong> ${film.id}</p> <!-- Display film's ID -->
 		<p>
 			<strong>Title:</strong> ${film.title}
 		</p>
@@ -67,6 +64,11 @@
 		</p>
 
 	</div>
+	
+	<!-- Back to Home Page button -->
+        <form action="home.do" method="GET">
+            <input type="submit" value="Back to Home" />
+        </form>
 
 	<!-- added link to delete film from database    -->
 	<form action="deleteFilm.do" method=POST>
@@ -74,6 +76,6 @@
 			type="submit" value="Delete this Film" />
 	</form>
 
-	<!-- <a href="deleteFilm.do?id=${film.id}">Delete this film</a>- -->
+
 </body>
 </html>

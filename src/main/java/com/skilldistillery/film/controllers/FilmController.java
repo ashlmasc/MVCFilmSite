@@ -98,14 +98,29 @@ public class FilmController {
     }
 	 
 	// new code for delete functionality
-	@GetMapping("/deleteFilm.do")
-	public String deleteFilm(@RequestParam("id") int filmId, Model model) throws SQLException {
-	    boolean isDeleted = filmDAO.deleteFilm(filmId);
-	    if (!isDeleted) {
-	        model.addAttribute("deleteError", "Film could not be deleted.");
-	        return "deleteFailure"; // JSP page for delete failure
+//	@GetMapping("/deleteFilm.do")
+//	public String deleteFilm(@RequestParam("id") int filmId, Model model) throws SQLException {
+//	    boolean isDeleted = filmDAO.deleteFilm(filmId);
+//	    if (!isDeleted) {
+//	        model.addAttribute("deleteError", "Film could not be deleted.");
+//	        return "deleteFailure"; // JSP page for delete failure
+//	    }
+//	    return "redirect:/films"; // Redirect to list of films after deletion
+//	}
+	
+	@PostMapping("/deleteFilm.do")
+	public String deleteFilm(@RequestParam("id") int filmId, Model model) {
+	    try {
+	        boolean isDeleted = filmDAO.deleteFilm(filmId);
+	        if (!isDeleted) {
+	            model.addAttribute("message", "Film could not be deleted.");
+	        } else {
+	            model.addAttribute("message", "Film successfully deleted.");
+	        }
+	    } catch (SQLException e) {
+	        model.addAttribute("message", "Database error occurred during deletion.");
 	    }
-	    return "redirect:/films"; // Redirect to list of films after deletion
+	    return "deleteStatus"; // JSP page for showing deletion status
 	}
 	
 	

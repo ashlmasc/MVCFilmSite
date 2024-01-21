@@ -19,17 +19,19 @@ public class FilmDAOImpl implements FilmDAO {
 	private static final String URL = "jdbc:mysql://localhost:3306/sdvid?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=US/Mountain";
 	private static final String USER = "student";
 	private static final String PWD = "student";
+	
+
+
 
 	@Override
 	public Film findFilmById(int filmId) {
 		Film film = null;
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			return film;
 		}
-
 		try {
 			Connection connection = DriverManager.getConnection(URL, USER, PWD);
 
@@ -74,51 +76,60 @@ public class FilmDAOImpl implements FilmDAO {
 	}
 
 	@Override
-	public List<Film> findFilmByKeyword(String userKeyword) {
-		List<Film> foundFilms = new ArrayList<Film>();
+	public List<Film> findFilmByKeyword(String query) {
 		String user = "student";
 		String pass = "student";
-
+		List<Film> films = new ArrayList<>();
 		try {
-			Connection conn = DriverManager.getConnection(URL, user, pass);
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			return films;
+		}
+		Connection conn;
+		try {
+			conn = DriverManager.getConnection(URL, user, pass);
+			String sql = "SELECT * FROM film WHERE film.title LIKE ? OR film.description LIKE ?";
 
-			String sql = "SELECT * " + " FROM film JOIN language ON film.language_id = language.id "
-					+ " WHERE film.title LIKE ? OR film.description LIKE ?";
 			PreparedStatement ps = conn.prepareStatement(sql);
-			String userQuery = "%" + userKeyword + "%";
-			ps.setString(1, userQuery);
-			ps.setString(2, userQuery);
-			ResultSet resultSet = ps.executeQuery();
-			while (resultSet.next()) {
+			ps.setString(1, "%" + query + "%");
+			ps.setString(2, "%" + query + "%");
+			ResultSet results = ps.executeQuery();
+
+			while (results.next()) {
 				Film film = new Film();
 
-				film.setId(resultSet.getInt("id"));
-				film.setTitle(resultSet.getString("title"));
-				film.setDescription(resultSet.getString("description"));
-				film.setReleaseYear(resultSet.getInt("release_year"));
-				film.setLanguageId(resultSet.getInt("language_id"));
-				film.setRentalDuration(resultSet.getInt("rental_duration"));
-				film.setRentalRate(resultSet.getDouble("rental_rate"));
-				film.setLength(resultSet.getInt("length"));
-				film.setReplacementCost(resultSet.getDouble("replacement_cost"));
-				film.setRating(resultSet.getString("rating"));
-				film.setSpecialFeatures(resultSet.getString("special_features"));
+				film.setId(results.getInt("id"));
+				film.setTitle(results.getString("title"));
+				film.setDescription(results.getString("description"));
+				film.setReleaseYear(results.getInt("release_year"));
+				film.setLanguageId(results.getInt("language_id"));
+				film.setRentalDuration(results.getInt("rental_duration"));
+				film.setRentalRate(results.getDouble("rental_rate"));
+				film.setLength(results.getInt("length"));
+				film.setReplacementCost(results.getDouble("replacement_cost"));
+				film.setRating(results.getString("rating"));
+				film.setSpecialFeatures(results.getString("special_features"));
+				film.setActors(findActorsByFilmId(results.getInt("id")));
 
-				 //film.setActors(findActorById(film.getId()));
-
-				foundFilms.add(film);
+				films.add(film);
 			}
+
+			ps.close();
+			conn.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return foundFilms;
-
+		return films;
 	}
-	
+
 	public List<String> findFilmCategories(int filmId) throws SQLException {
 		List<String> categories = new ArrayList<>();
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			return categories;
+		}
 		Connection connection = DriverManager.getConnection(URL, USER, PWD);
 		String sql = "SELECT category.name FROM category JOIN film_category ON category.id = film_category.category_id WHERE film_category.film_id = ?";
 
@@ -131,7 +142,7 @@ public class FilmDAOImpl implements FilmDAO {
 		resultSet.close();
 		statement.close();
 		connection.close();
-
+		
 		return categories;
 	}
 
@@ -184,24 +195,26 @@ public class FilmDAOImpl implements FilmDAO {
 		return true;
 
 	}
-	
-	@Override
-    public boolean deleteFilm(int filmId) throws SQLException {
-        String sql = "DELETE FROM film WHERE id = ?";
-        try (Connection connection = DriverManager.getConnection(URL, USER, PWD);
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, filmId);
 
-            int affectedRows = statement.executeUpdate();
-            return affectedRows > 0;
-        }
-    }
-	
-	
+	@Override
+	public boolean deleteFilm(int filmId) throws SQLException {
+		String sql = "DELETE FROM film WHERE id = ?";
+		try (Connection connection = DriverManager.getConnection(URL, USER, PWD);
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, filmId);
+
+			int affectedRows = statement.executeUpdate();
+			return affectedRows > 0;
+		}
+	}
 
 	public Actor findActorById(int actorId) throws SQLException {
 		Actor actor = null;
-
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			return actor;
+		}
 		Connection connection = DriverManager.getConnection(URL, USER, PWD);
 
 		String sql = "SELECT id, first_name, last_name FROM actor WHERE id = ?";
@@ -217,10 +230,14 @@ public class FilmDAOImpl implements FilmDAO {
 		connection.close();
 		return actor;
 	}
-	
+
 	public List<Actor> findActorsByFilmId(int filmId) throws SQLException {
 		List<Actor> actors = new ArrayList<>();
-
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			return actors;
+		}
 		Connection connection = DriverManager.getConnection(URL, USER, PWD);
 
 		String sql = "SELECT actor.id, actor.first_name, actor.last_name "
@@ -236,15 +253,17 @@ public class FilmDAOImpl implements FilmDAO {
 		resultSet.close();
 		statement.close();
 		connection.close();
+		
 		return actors;
 	}
-	
-	public Film createFilm(Film film) throws SQLException {
-		String sql = "INSERT INTO film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features) VALUES (?, ?, ?, 1, ?, ?, ?, ?, ?, ?)";
 
-		try (Connection connnnection = DriverManager.getConnection(URL, USER, PWD);
-				PreparedStatement statement = connnnection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
+	public Film createFilm(Film film) {
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(URL, USER, PWD);
+			conn.setAutoCommit(false); // START TRANSACTION
+			String sql = "INSERT INTO film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features) VALUES (?, ?, ?, 1, ?, ?, ?, ?, ?, ?)";
+			PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, film.getTitle());
 
 			if (film.getDescription() != null) {
@@ -259,13 +278,11 @@ public class FilmDAOImpl implements FilmDAO {
 				statement.setNull(3, java.sql.Types.INTEGER);
 			}
 
-			
 			statement.setInt(4, film.getRentalDuration());
 			statement.setDouble(5, film.getRentalRate());
 
-
 			if (film.getLength() != null) {
-				statement.setInt(6, film.getLength()); 
+				statement.setInt(6, film.getLength());
 			} else {
 				statement.setNull(6, java.sql.Types.INTEGER);
 			}
@@ -283,18 +300,37 @@ public class FilmDAOImpl implements FilmDAO {
 				statement.setNull(9, java.sql.Types.VARCHAR);
 			}
 
-			int affectedRows = statement.executeUpdate();
-			if (affectedRows == 0) {
-				return null;
-			}
+			int updateCount = statement.executeUpdate();
+			if (updateCount == 1) {
+				ResultSet keys = statement.getGeneratedKeys();
 
-			try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-				if (generatedKeys.next()) {
-					film.setId(generatedKeys.getInt(1));
-				} else {
-					throw new SQLException("Creating film failed, no ID obtained.");
+				if (keys.next()) {
+					int newfilmId = keys.getInt(1);
+					film.setId(newfilmId);
+//		        if (film.getFilms() != null && film.getFilms().size() > 0) {
+//		          sql = "INSERT INTO film_actor (film_id, actor_id) VALUES (?,?)";
+//		          statement = conn.prepareStatement(sql);
+//		          for (Film film : actor.getFilms()) {
+//		        	  statement.setInt(1, film.getId());
+//		        	  statement.setInt(2, newActorId);
+//		            updateCount = statement.executeUpdate();
+//		          }
+//		        }
+				}
+			} else {
+				film = null;
+			}
+			conn.commit(); // COMMIT TRANSACTION
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+			if (conn != null) {
+				try {
+					conn.rollback();
+				} catch (SQLException sqle2) {
+					System.err.println("Error trying to rollback");
 				}
 			}
+			throw new RuntimeException("Error inserting actor " + film);
 		}
 		return film;
 	}

@@ -1,6 +1,7 @@
 package com.skilldistillery.film.controllers;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.skilldistillery.film.data.FilmDAO;
 import com.skilldistillery.film.entities.Film;
@@ -36,6 +38,19 @@ public class FilmController {
 	    model.addAttribute("film", film);
 	    return "filmDetail";  // added prefix/suffix in servlet so just name
 	}
+//	ADDED CODE
+	@RequestMapping(path = "filmsSearch.do")
+	public ModelAndView filmsSearch(@RequestParam("search") String keyword) {
+		ModelAndView mv = new ModelAndView();
+		List<Film> films = filmDAO.findFilmByKeyword(keyword);
+		if(films.isEmpty()) {
+			mv.setViewName("filmNotFound");
+		}
+		mv.addObject("films", films);
+		mv.setViewName("filmsSearch");
+		return mv;
+	}
+	
 	
 	@PostMapping("/addFilm")
     public String addFilm(@ModelAttribute("film") Film film, BindingResult result, Model model) {

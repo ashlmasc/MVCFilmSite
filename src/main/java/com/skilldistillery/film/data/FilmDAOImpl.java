@@ -258,6 +258,11 @@ public class FilmDAOImpl implements FilmDAO {
 	}
 
 	public Film createFilm(Film film) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			return film;
+		}
 		Connection conn = null;
 		try {
 			conn = DriverManager.getConnection(URL, USER, PWD);
@@ -334,22 +339,5 @@ public class FilmDAOImpl implements FilmDAO {
 		}
 		return film;
 	}
-
-	//Mace code:
-	@Override
-	public boolean save(Film film) {
-	    try {
-	        if (film.getId() == 0) {
-	            createFilm(film);
-	        } else {
-	            updateFilm(film);
-	        }
-	        return true; // Success
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        return false; // Error occurred
-	    }
-	}
-	//end of Mace code
 
 }

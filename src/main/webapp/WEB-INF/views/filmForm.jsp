@@ -78,10 +78,10 @@
                 <input type="text" id="specialFeatures" name="specialFeatures" class="form-control" required>
             </div> -->
 
-            <div class="form-group">
+           <!--  <div class="form-group">
                 <label for="category">Category:</label>
                 <input type="text" id="category" name="category" class="form-control" required>
-            </div>
+            </div> -->
 
             <div class="form-group">
 				<label for="actors">Actors:</label>

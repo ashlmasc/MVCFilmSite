@@ -70,19 +70,14 @@ public class FilmController {
 	//end of Mace code.
 	
 	@PostMapping("/addFilm.do")
-	public String addFilm(@ModelAttribute("film") Film film, BindingResult result, Model model, //Mace Code
-            @RequestParam(value = "actors", required = false) List<String> actorNames) { //end of Mace Code
+	public ModelAndView addFilm(@ModelAttribute("film") Film film, BindingResult result, Model model, //Mace Code
+            @RequestParam(value = "actors", required = false) List<String> actorNames) throws SQLException { //end of Mace Code
         // Validation logic
         if (film.getTitle() == null || film.getTitle().isEmpty()) {
             result.rejectValue("title", "error.film", "Title is required.");
         }
-        // may need more validation checks
 
-        if (result.hasErrors()) {
-            return "filmForm"; // added prefix/suffix in servlet so just name
-        }
-        
-        //Mace code:
+            
         List<Actor> actors = actorNames.stream()
                 .map(actorName -> {
                     String[] names = actorName.split(" ");
@@ -92,17 +87,14 @@ public class FilmController {
 
         film.setActors(actors);
         
-        System.out.println("Received film: " + film);
+
+        Film userFilm = filmDAO.createFilm(film);
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("film", userFilm);
         
-        //end of Mace code.
 
-        boolean isSaved = filmDAO.save(film); // Save the film
-        if (!isSaved) {
-            model.addAttribute("saveError", "There was an error saving the film.");
-            return "filmForm"; // Return to the form view in case of save error
-        }
-
-        return "redirect:/films"; // Redirect after successful operation
+        mv.setViewName("filmDetail");
+        return mv;
     }
 	 
 	// new code for delete functionality

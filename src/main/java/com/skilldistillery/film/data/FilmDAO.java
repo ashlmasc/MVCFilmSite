@@ -9,7 +9,6 @@ import com.skilldistillery.film.entities.Film;
 public interface FilmDAO {
 	Film findFilmById(int filmId);
 
-	boolean save(Film film);
 
 	public Actor findActorById(int actorId) throws SQLException;
 

@@ -335,14 +335,21 @@ public class FilmDAOImpl implements FilmDAO {
 		return film;
 	}
 
+	//Mace code:
 	@Override
 	public boolean save(Film film) {
-		boolean success = false;
-		// Code to connect to the database
-		// Determine if this is an insert (new film) or an update (existing film)
-		// Execute an INSERT or UPDATE statement
-		// Set success to true if the operation is successful
-		return success;
+	    try {
+	        if (film.getId() == 0) {
+	            createFilm(film);
+	        } else {
+	            updateFilm(film);
+	        }
+	        return true; // Success
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false; // Error occurred
+	    }
 	}
+	//end of Mace code
 
 }

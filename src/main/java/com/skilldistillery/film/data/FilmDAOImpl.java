@@ -32,8 +32,8 @@ public class FilmDAOImpl implements FilmDAO {
 		try {
 			Connection connection = DriverManager.getConnection(URL, USER, PWD);
 
-			String sql = "SELECT film.*, language.name AS language_name FROM film JOINfilm.*, language.name AS language_name FROM film JOIN  language ON film.language_id = language.id WHERE film.id = ?";
-
+			String sql = "SELECT film.*, language.name AS language_name FROM film JOIN language ON film.language_id = language.id WHERE film.id = ?";
+			
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, filmId);
 			ResultSet filmResult = statement.executeQuery();
@@ -87,7 +87,6 @@ public class FilmDAOImpl implements FilmDAO {
 			conn = DriverManager.getConnection(URL, user, pass);
 			//String sql = "SELECT * FROM film WHERE film.title LIKE ? OR film.description LIKE ?";
 			String sql = "SELECT film.*, language.name AS language_name FROM film JOIN language ON film.language_id = language.id WHERE film.title LIKE ? OR film.description LIKE ?";
-			
 			
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, "%" + query + "%");

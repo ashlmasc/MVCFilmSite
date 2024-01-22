@@ -33,32 +33,12 @@
                 <label for="releaseYear">Release Year:</label>
                 <input value="${film.releaseYear}" type="text" id="releaseYear" name="releaseYear" class="form-control" required>
             </div>
-            
-           <div class="form-group">
-                <label for="language">Language:</label>
-                <input value="${film.language}" type="text" id="language" name="language" class="form-control">
-            </div> 
-
-             <div class="form-group">
-                <label for="rentalDuration">Rental Duration (days):</label>
-                <input value="${film.rentalDuration}" type="text" id="rentalDuration" name="rentalDuration" class="form-control">
-            </div>
-
-             <div class="form-group">
-                <label for="rentalRate">Rental Rate:</label>
-                <input value="${film.rentalRate}" type="text" id="rentalRate" name="rentalRate" class="form-control">
-            </div> 
 
 
             <div class="form-group">
                 <label for="length">Length (minutes):</label>
                 <input value="${film.length}" type="text" id="length" name="length" class="form-control" required>
             </div>
-            
-            <div class="form-group">
-                <label for="replacementCost">Replacement Cost:</label>
-                <input value="${film.replacementCost}" type="text" id="replacementCost" name="replacementCost" class="form-control">
-            </div> 
 
 
             <div class="form-group">

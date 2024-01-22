@@ -110,16 +110,17 @@ public class FilmController {
 	}
 
 	@PostMapping("/filmDetail.do")
-	public ModelAndView updatedFilmPage(@RequestParam("id") Film updatedFilm) {
+	public ModelAndView updatedFilmPage(@RequestParam("id") int filmId, @RequestParam("film") Film updatedFilm) {
 		ModelAndView mv = new ModelAndView();
 		Film film = filmDAO.findFilmById(updatedFilm.getId());
 		boolean newFilm = filmDAO.updateFilm(film);
 		if (newFilm) {
 			mv.setViewName("filmDetail");
+			mv.addObject("film", film);
 		} else {
 			mv.setViewName("home");
 		}
-		mv.addObject("film", film);
+		mv.addObject("id", filmId);
 		return mv;
 	}
 

@@ -57,7 +57,7 @@
 <!-- 		<input type="submit" value="Update Film" /> -->
 <!-- 	</form> -->
 	
-	<form action="updateFilmForm.do" method="GET">
+	<form action="updateFilm.do" method="GET">
     <input type="hidden" name="id" value="${film.id}" />
     <input type="submit" value="Update Film" />
 

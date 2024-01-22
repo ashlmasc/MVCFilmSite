@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
@@ -39,7 +39,7 @@
 					<strong>Length:</strong> ${film.length} minutes
 				</p>
 				<p>
-					<strong>Replacement Cost:</strong> ${film.replacementCost}
+					<strong>Replacement Cost:</strong> $${film.replacementCost}
 				</p>
 				<p>
 					<strong>Rating:</strong> ${film.rating}
@@ -65,11 +65,17 @@
                  ${actor.firstName} ${actor.lastName}, 
              </c:forEach>
 				</p>
-<br>
-<br>
-<br>
+				<form action="deleteFilm.do" method=POST>
+					<input type="hidden" name="id" value="${film.id}" /> <input
+						type="submit" value="Delete this Film" />
+				</form>
+				<br>
+				<form action="updateFilm.do" method="GET">
+					<input type="hidden" name="id" value="${film.id}" /> <input
+						type="submit" value="Update Film" />
+				</form>
 			</div>
-			</c:if>
+		</c:if>
 	</c:forEach>
 
 </body>

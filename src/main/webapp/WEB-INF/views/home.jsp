@@ -23,5 +23,3 @@
 	<button onclick="window.location.href='/MVCFilmSite/filmForm.do'">Add New Film</button>
 </body>
 </html>
-
-

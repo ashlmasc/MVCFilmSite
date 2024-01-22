@@ -96,19 +96,11 @@ public class FilmController {
 		boolean isDeleted = filmDAO.deleteFilm(filmId);
 		if (!isDeleted) {
 			model.addAttribute("deleteError", "Film could not be deleted.");
-			return "deleteFailure"; // JSP page for delete failure
+			return "deleteStatus"; // JSP page for delete failure
 		}
 		return "home"; // Redirect to list of films after deletion
 	}
 
-//	@GetMapping("/updateFilm.do")
-//	public ModelAndView updateFilm(@RequestParam("id") int filmId) throws SQLException {
-//		Film film = filmDAO.findFilmById(filmId);
-//		ModelAndView mv = new ModelAndView();
-//		mv.addObject("film", film);
-//		mv.setViewName("update");
-//		return mv;
-//	}
 	
 	@RequestMapping(path = "/updateFilm.do", method = RequestMethod.GET)
 	public String updateFilmForm(@RequestParam("id") int id, Model model) {
@@ -117,21 +109,6 @@ public class FilmController {
 		return "update";
 	}
 
-//	@PostMapping("/filmDetail.do")
-//	public ModelAndView updatedFilmPage(@RequestParam("id") int filmId, @RequestParam("film") Film updatedFilm) {
-//		ModelAndView mv = new ModelAndView();
-//		Film film = filmDAO.findFilmById(updatedFilm.getId());
-//		boolean newFilm = filmDAO.updateFilm(film);
-//		if (newFilm) {
-//			mv.addObject("film", film);
-//			mv.setViewName("filmDetail");
-//		} else {
-//			mv.setViewName("home");
-//		}
-//		mv.addObject("id", filmId);
-//		return mv;
-//	}
-	
 	@RequestMapping(path = "/filmDetail.do", method = RequestMethod.POST)
 	public String updateFilmFinally(@ModelAttribute("film")Film updatedFilm, Model model) {
 		Film film = filmDAO.findFilmById(updatedFilm.getId());

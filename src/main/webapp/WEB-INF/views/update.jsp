@@ -16,7 +16,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <form action="updateFilm.do?id=${film.id}" method="POST">
+        <form action="updateFilm.do?id=${film.id}" method="GET">
             <h2 class="text-center mb-4">Update Film</h2>
 
             <div class="form-group">

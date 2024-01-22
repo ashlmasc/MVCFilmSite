@@ -53,8 +53,15 @@
 	</form>
 	<br><br>
 	
-	<form action="updateFilm.do?id=${film.id}" method=POST>
-		<input type="submit" value="Update Film" />
-	</form>
+<%-- 	<form action="updateFilm.do?id=${film.id}" method=POST> --%>
+<!-- 		<input type="submit" value="Update Film" /> -->
+<!-- 	</form> -->
+	
+	<form action="updateFilmForm.do" method="GET">
+    <input type="hidden" name="id" value="${film.id}" />
+    <input type="submit" value="Update Film" />
+
+</form>
+	
 </body>
 </html>

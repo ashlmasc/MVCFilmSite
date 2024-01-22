@@ -92,6 +92,17 @@ public class FilmController {
 		return mv;
 	}
 	
+	@GetMapping("/updateFilmForm.do")
+	public String showUpdateFilmForm(@RequestParam("id") int filmId, Model model) {
+	    Film film = filmDAO.findFilmById(filmId);
+	    if (film == null) {
+	        model.addAttribute("errorMessage", "No film found with ID " + filmId);
+	        return "filmNotFound";
+	    }
+	    model.addAttribute("film", film);
+	    return "update"; 
+	}
+	
 	@PostMapping("/updateFilm.do")
 	public ModelAndView updateFilm(@ModelAttribute("film") Film updatedFilm) {
 	    ModelAndView mv = new ModelAndView();

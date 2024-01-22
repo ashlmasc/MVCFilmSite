@@ -19,9 +19,6 @@ public class FilmDAOImpl implements FilmDAO {
 	private static final String URL = "jdbc:mysql://localhost:3306/sdvid?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=US/Mountain";
 	private static final String USER = "student";
 	private static final String PWD = "student";
-	
-
-
 
 	@Override
 	public Film findFilmById(int filmId) {
@@ -36,7 +33,7 @@ public class FilmDAOImpl implements FilmDAO {
 			Connection connection = DriverManager.getConnection(URL, USER, PWD);
 
 			String sql = "SELECT film.*, language.name AS language_name FROM film JOIN language ON film.language_id = language.id WHERE film.id = ?";
-
+			
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, filmId);
 			ResultSet filmResult = statement.executeQuery();
@@ -88,8 +85,9 @@ public class FilmDAOImpl implements FilmDAO {
 		Connection conn;
 		try {
 			conn = DriverManager.getConnection(URL, user, pass);
-			String sql = "SELECT * FROM film WHERE film.title LIKE ? OR film.description LIKE ?";
-
+			//String sql = "SELECT * FROM film WHERE film.title LIKE ? OR film.description LIKE ?";
+			String sql = "SELECT film.*, language.name AS language_name FROM film JOIN language ON film.language_id = language.id WHERE film.title LIKE ? OR film.description LIKE ?";
+			
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, "%" + query + "%");
 			ps.setString(2, "%" + query + "%");
@@ -97,6 +95,9 @@ public class FilmDAOImpl implements FilmDAO {
 
 			while (results.next()) {
 				Film film = new Film();
+				
+				//added
+				int filmId = results.getInt("id");
 
 				film.setId(results.getInt("id"));
 				film.setTitle(results.getString("title"));
@@ -110,6 +111,13 @@ public class FilmDAOImpl implements FilmDAO {
 				film.setRating(results.getString("rating"));
 				film.setSpecialFeatures(results.getString("special_features"));
 				film.setActors(findActorsByFilmId(results.getInt("id")));
+				
+				// Retrieve categories
+	            List<String> categories = findFilmCategories(filmId);
+	            film.setCategories(categories);
+
+	            // Retrieve language name
+	            film.setLanguage(results.getString("language_name"));
 
 				films.add(film);
 			}
@@ -339,5 +347,4 @@ public class FilmDAOImpl implements FilmDAO {
 		}
 		return film;
 	}
-
 }

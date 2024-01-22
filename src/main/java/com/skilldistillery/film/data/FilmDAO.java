@@ -9,7 +9,6 @@ import com.skilldistillery.film.entities.Film;
 public interface FilmDAO {
 	Film findFilmById(int filmId);
 
-
 	public Actor findActorById(int actorId) throws SQLException;
 
 	List<Film> findFilmByKeyword(String userKeyword);

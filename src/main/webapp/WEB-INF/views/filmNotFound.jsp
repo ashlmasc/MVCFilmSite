@@ -13,7 +13,10 @@
     <h2>Film Not Found</h2>
     <p>${errorMessage}</p><br>
     
-    
+    <!-- Back to Home Page button -->
+        <form action="." method="GET">
+            <input type="submit" value="Back to Home" />
+        </form>
     
 </body>
 </html>

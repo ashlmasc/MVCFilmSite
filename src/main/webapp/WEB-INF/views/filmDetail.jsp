@@ -38,7 +38,7 @@
                  ${actor.firstName} ${actor.lastName}${not status.last ? ', ' : ''}
              </c:forEach>
 	</div>
-	
+	<br>
 	<!-- Back to Home Page button -->
         <form action="." method="GET">
             <input type="submit" value="Back to Home" />
@@ -52,10 +52,7 @@
 			type="submit" value="Delete this Film" />
 	</form>
 	<br><br>
-	
-<%-- 	<form action="updateFilm.do?id=${film.id}" method=POST> --%>
-<!-- 		<input type="submit" value="Update Film" /> -->
-<!-- 	</form> -->
+
 	
 	<form action="updateFilm.do" method="GET">
     <input type="hidden" name="id" value="${film.id}" />

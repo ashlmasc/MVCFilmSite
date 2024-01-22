@@ -92,6 +92,12 @@
 			</div>
 
             <button type="submit" class="btn btn-success btn-block">Add Film</button>
+        	<br>
+            <!-- Link to return to the home page -->
+            <a href="." class="btn btn-primary">Return to Home Page</a>
+            
+            <br>
+            <br>
         </form>
     </div>
 

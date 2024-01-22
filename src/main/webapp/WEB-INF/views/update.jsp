@@ -48,7 +48,15 @@
 
 
 			<button type="submit" class="btn btn-success btn-block">Update Film</button>
+			<br>
+        	<!-- Button to cancel update and return to the previous page -->
+            <button type="button" onclick="history.back();" class="btn btn-secondary">Cancel and Return to Previous Page</button>
 
+            <!-- Link to return to the home page -->
+            <a href="." class="btn btn-primary">Return to Home Page</a>
+            
+            <br>
+            <br>
         </form>
     </div>
 

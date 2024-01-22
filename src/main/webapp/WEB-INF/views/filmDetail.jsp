@@ -38,7 +38,7 @@
                  ${actor.firstName} ${actor.lastName}${not status.last ? ', ' : ''}
              </c:forEach>
 	</div>
-	
+	<br>
 	<!-- Back to Home Page button -->
         <form action="." method="GET">
             <input type="submit" value="Back to Home" />

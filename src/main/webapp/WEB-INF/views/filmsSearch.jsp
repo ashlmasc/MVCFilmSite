@@ -8,10 +8,6 @@ pageEncoding="UTF-8"%>
 <title>Film Details</title>
 </head>
 <body>
-	<!--     <h2>Film Details</h2> -->
-	<%--     <p>Title: ${film.title}</p> --%>
-	<%--     <p>Description: ${film.description}</p> --%>
-	<!-- Display other film details -->
 
 	<h2>Film Details</h2>
 	<c:forEach var="film" items="${films}">
@@ -44,6 +40,11 @@ pageEncoding="UTF-8"%>
 				
 				<br>
 				<br>
+				<!-- Back to Home Page button -->
+        		<form action="." method="GET">
+           		 	<input type="submit" value="Back to Home" />
+        		</form>
+        		<br>
 				<form action="deleteFilm.do" method=POST>
 					<input type="hidden" name="id" value="${film.id}" /> <input
 						type="submit" value="Delete this Film" />

@@ -1,13 +1,11 @@
 package com.skilldistillery.film.controllers;
 
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 import java.sql.SQLException;
 
 import java.util.List;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,88 +27,99 @@ public class FilmController {
 
 	@Autowired
 	private FilmDAO filmDAO;
-	
+
 	@RequestMapping("/")
 	public String home() {
 		return "home";
 	}
-	
+
 	@GetMapping("/viewFilm.do")
 	public String viewFilm(@RequestParam("id") int filmId, Model model) {
-	    Film film = filmDAO.findFilmById(filmId);
-	    if (film == null) {
-	        model.addAttribute("errorMessage", "No film found with ID " + filmId);
-	        return "filmNotFound";  // added prefix/suffix in servlet so just names
-	    }
-	    model.addAttribute("film", film);
-	    return "filmDetail";  // added prefix/suffix in servlet so just name
+		Film film = filmDAO.findFilmById(filmId);
+		if (film == null) {
+			model.addAttribute("errorMessage", "No film found with ID " + filmId);
+			return "filmNotFound"; // added prefix/suffix in servlet so just names
+		}
+		model.addAttribute("film", film);
+		return "filmDetail"; // added prefix/suffix in servlet so just name
 	}
+
 //	ADDED CODE
 	@RequestMapping(path = "filmsSearch.do")
 	public ModelAndView filmsSearch(@RequestParam("search") String keyword) {
 		ModelAndView mv = new ModelAndView();
 		List<Film> films = filmDAO.findFilmByKeyword(keyword);
-		if(films.isEmpty()) {
+		if (films.isEmpty()) {
 			mv.setViewName("filmNotFound");
 		}
 		mv.addObject("films", films);
 		mv.setViewName("filmsSearch");
 		return mv;
 	}
-	
-	
-	//Mace code:
-	
+
+	// Mace code:
+
 	@GetMapping("/filmForm.do")
 	public String showFilmForm(Model model) {
 		model.addAttribute("film", new Film());
 		return "filmForm";
 	}
-	
-	//end of Mace code.
-	
+
+	// end of Mace code.
+
 	@PostMapping("/addFilm.do")
-	public ModelAndView addFilm(@ModelAttribute("film") Film film, BindingResult result, Model model, //Mace Code
-            @RequestParam(value = "actors", required = false) List<String> actorNames) throws SQLException { //end of Mace Code
-        // Validation logic
-        if (film.getTitle() == null || film.getTitle().isEmpty()) {
-            result.rejectValue("title", "error.film", "Title is required.");
-        }
+	public ModelAndView addFilm(@ModelAttribute("film") Film film, BindingResult result, Model model, // Mace Code
+			@RequestParam(value = "actors", required = false) List<String> actorNames) throws SQLException { // end of
+																												// Mace
+																												// Code
+		// Validation logic
+		if (film.getTitle() == null || film.getTitle().isEmpty()) {
+			result.rejectValue("title", "error.film", "Title is required.");
+		}
 
-            
-        List<Actor> actors = actorNames.stream()
-                .map(actorName -> {
-                    String[] names = actorName.split(" ");
-                    return new Actor(0, names[0], names[1]);
-                })
-                .collect(Collectors.toList());
+		List<Actor> actors = actorNames.stream().map(actorName -> {
+			String[] names = actorName.split(" ");
+			return new Actor(0, names[0], names[1]);
+		}).collect(Collectors.toList());
 
-        film.setActors(actors);
-        
+		film.setActors(actors);
 
-        Film userFilm = filmDAO.createFilm(film);
-        ModelAndView mv = new ModelAndView();
-        mv.addObject("film", userFilm);
-        
+		Film userFilm = filmDAO.createFilm(film);
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("film", userFilm);
 
-        mv.setViewName("filmDetail");
-        return mv;
-    }
-	
-	@PostMapping("/deleteFilm.do")
-	public String deleteFilm(@RequestParam("id") int filmId, Model model) {
-	    try {
-	        boolean isDeleted = filmDAO.deleteFilm(filmId);
-	        if (!isDeleted) {
-	            model.addAttribute("message", "Film could not be deleted.");
-	        } else {
-	            model.addAttribute("message", "Film successfully deleted.");
-	        }
-	    } catch (SQLException e) {
-	        model.addAttribute("message", "Database error occurred during deletion.");
-	    }
-	    return "deleteStatus"; // JSP page for showing deletion status
+		mv.setViewName("filmDetail");
+		return mv;
 	}
 	
-	
+	@PostMapping("/updateFilm.do")
+	public String updateFilm(@ModelAttribute("film") Film updatedFilm, Model model) {
+	    boolean isUpdated = filmDAO.updateFilm(updatedFilm);
+
+	    if (isUpdated) {
+	        // Redirect to the film detail page
+	        return "redirect:/viewFilm.do?id=" + updatedFilm.getId();
+	    } else {
+	        // Handle update failure, show an error message or redirect to an error page
+	        model.addAttribute("errorMessage", "Failed to update film");
+	        return "errorPage";
+	    }
+	}
+
+
+	@PostMapping("/deleteFilm.do")
+	public String deleteFilm(@RequestParam("id") int filmId, Model model) {
+		try {
+			boolean isDeleted = filmDAO.deleteFilm(filmId);
+			if (!isDeleted) {
+				model.addAttribute("message", "Film could not be deleted.");
+			} else {
+				model.addAttribute("message", "Film successfully deleted.");
+			}
+		} catch (SQLException e) {
+			model.addAttribute("message", "Database error occurred during deletion.");
+		}
+		return "deleteStatus"; // JSP page for showing deletion status
+	}
+
 }

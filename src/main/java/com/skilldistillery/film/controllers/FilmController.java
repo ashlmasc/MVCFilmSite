@@ -5,10 +5,6 @@ import java.util.stream.Collectors;
 
 import java.sql.SQLException;
 
-
-import java.util.List;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -31,7 +26,7 @@ public class FilmController {
 	@Autowired
 	private FilmDAO filmDAO;
 
-	@RequestMapping("/")
+	@RequestMapping("")
 	public String home() {
 		return "home";
 	}
@@ -126,54 +121,8 @@ public class FilmController {
 		}
 		mv.addObject("film", film);
 		return mv;
-		mv.setViewName("filmDetail");return mv;
 	}
 
-
-	
-
-	@GetMapping("/updateFilmForm.do")
-	public String showUpdateFilmForm(@RequestParam("id") int filmId, Model model) {
-		Film film = filmDAO.findFilmById(filmId);
-		if (film == null) {
-			model.addAttribute("errorMessage", "No film found with ID " + filmId);
-			return "filmNotFound";
-		}
-		model.addAttribute("film", film);
-		return "update";
-	}
-
-	@PostMapping("/updateFilm.do")
-	public ModelAndView updateFilm(@ModelAttribute("film") Film updatedFilm) {
-		ModelAndView mv = new ModelAndView();
-
-		boolean isUpdated = filmDAO.updateFilm(updatedFilm);
-
-		if (isUpdated) {
-			// Redirect to the film detail page with the updated film
-			mv.setViewName("redirect:/viewFilm.do?id=" + updatedFilm.getId());
-		} else {
-			// Handle update failure, show an error message or redirect to an error page
-			mv.addObject("errorMessage", "Failed to update film");
-			mv.setViewName("errorPage");
-		}
-
-		return mv;
-	}
-
-	@PostMapping("/deleteFilm.do")
-	public String deleteFilm(@RequestParam("id") int filmId, Model model) {
-		try {
-			boolean isDeleted = filmDAO.deleteFilm(filmId);
-			if (!isDeleted) {
-				model.addAttribute("message", "Film could not be deleted.");
-			} else {
-				model.addAttribute("message", "Film successfully deleted.");
-			}
-		} catch (SQLException e) {
-			model.addAttribute("message", "Database error occurred during deletion.");
-		}
-		return "deleteStatus"; // JSP page for showing deletion status
-	}
+//	
 
 }

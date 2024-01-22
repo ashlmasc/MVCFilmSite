@@ -43,11 +43,25 @@
         <form action="." method="GET">
             <input type="submit" value="Back to Home" />
         </form>
+        
+        <br><br>
 
 	<!-- added link to delete film from database    -->
 	<form action="deleteFilm.do" method=POST>
 		<input type="hidden" name="id" value="${film.id}" /> <input
 			type="submit" value="Delete this Film" />
 	</form>
+	<br><br>
+	
+<%-- 	<form action="updateFilm.do?id=${film.id}" method=POST> --%>
+<!-- 		<input type="submit" value="Update Film" /> -->
+<!-- 	</form> -->
+	
+	<form action="updateFilmForm.do" method="GET">
+    <input type="hidden" name="id" value="${film.id}" />
+    <input type="submit" value="Update Film" />
+
+</form>
+	
 </body>
 </html>

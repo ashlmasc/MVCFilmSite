@@ -53,7 +53,7 @@
 	</form>
 	<br><br>
 	
-	<form action="updateFilm.do" method=POST>
+	<form action="updateFilm.do?id=${film.id}" method=POST>
 		<input type="submit" value="Update Film" />
 	</form>
 </body>

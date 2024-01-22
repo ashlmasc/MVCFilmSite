@@ -93,18 +93,23 @@ public class FilmController {
 	}
 	
 	@PostMapping("/updateFilm.do")
-	public String updateFilm(@ModelAttribute("film") Film updatedFilm, Model model) {
+	public ModelAndView updateFilm(@ModelAttribute("film") Film updatedFilm) {
+	    ModelAndView mv = new ModelAndView();
+
 	    boolean isUpdated = filmDAO.updateFilm(updatedFilm);
 
 	    if (isUpdated) {
-	        // Redirect to the film detail page
-	        return "redirect:/viewFilm.do?id=" + updatedFilm.getId();
+	        // Redirect to the film detail page with the updated film
+	        mv.setViewName("redirect:/viewFilm.do?id=" + updatedFilm.getId());
 	    } else {
 	        // Handle update failure, show an error message or redirect to an error page
-	        model.addAttribute("errorMessage", "Failed to update film");
-	        return "errorPage";
+	        mv.addObject("errorMessage", "Failed to update film");
+	        mv.setViewName("errorPage");
 	    }
+
+	    return mv;
 	}
+
 
 
 	@PostMapping("/deleteFilm.do")

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -100,28 +101,63 @@ public class FilmController {
 		return "redirect:/films"; // Redirect to list of films after deletion
 	}
 
-	@GetMapping("/updateFilm.do")
-	public ModelAndView updateFilm(@RequestParam("id") int filmId) throws SQLException {
-		Film film = filmDAO.findFilmById(filmId);
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("film", film);
-		mv.setViewName("update");
-		return mv;
+//	@GetMapping("/updateFilm.do")
+//	public ModelAndView updateFilm(@RequestParam("id") int filmId) throws SQLException {
+//		Film film = filmDAO.findFilmById(filmId);
+//		ModelAndView mv = new ModelAndView();
+//		mv.addObject("film", film);
+//		mv.setViewName("update");
+//		return mv;
+//	}
+	
+	@RequestMapping(path = "/updateFilm.do", method = RequestMethod.GET)
+	public String updateFilmForm(@RequestParam("id") int id, Model model) {
+		Film film = filmDAO.findFilmById(id);
+		model.addAttribute("film", film);
+		return "update";
 	}
 
-	@PostMapping("/filmDetail.do")
-	public ModelAndView updatedFilmPage(@RequestParam("id") int filmId, @RequestParam("film") Film updatedFilm) {
-		ModelAndView mv = new ModelAndView();
+//	@PostMapping("/filmDetail.do")
+//	public ModelAndView updatedFilmPage(@RequestParam("id") int filmId, @RequestParam("film") Film updatedFilm) {
+//		ModelAndView mv = new ModelAndView();
+//		Film film = filmDAO.findFilmById(updatedFilm.getId());
+//		boolean newFilm = filmDAO.updateFilm(film);
+//		if (newFilm) {
+//			mv.addObject("film", film);
+//			mv.setViewName("filmDetail");
+//		} else {
+//			mv.setViewName("home");
+//		}
+//		mv.addObject("id", filmId);
+//		return mv;
+//	}
+	
+	@RequestMapping(path = "/filmDetail.do", method = RequestMethod.POST)
+	public String updateFilmFinally(@ModelAttribute("film")Film updatedFilm, Model model) {
 		Film film = filmDAO.findFilmById(updatedFilm.getId());
-		boolean newFilm = filmDAO.updateFilm(film);
-		if (newFilm) {
-			mv.setViewName("filmDetail");
-			mv.addObject("film", film);
-		} else {
-			mv.setViewName("home");
+		
+		if(film != null) {
+			film.setTitle(updatedFilm.getTitle());
+			film.setDescription(updatedFilm.getDescription());
+			film.setRating(updatedFilm.getRating());
+			film.setLength(updatedFilm.getLength());
+			film.setLength(updatedFilm.getLength());
 		}
-		mv.addObject("id", filmId);
-		return mv;
+		
+		try {
+			boolean newFilm = filmDAO.updateFilm(film);
+			if (newFilm) {
+				model.addAttribute("Updated the film");
+			} else {
+				model.addAttribute("Failed to update film");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "filmDetail";
+		
 	}
 
 //	

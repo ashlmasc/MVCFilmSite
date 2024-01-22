@@ -1,14 +1,15 @@
 package com.skilldistillery.film.controllers;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,9 +70,19 @@ public class FilmController {
 			result.rejectValue("title", "error.film", "Title is required.");
 		}
 
+//		List<Actor> actors = actorNames.stream().map(actorName -> {
+//			String[] names = actorName.split(" ");
+//			return new Actor(0, names[0], names[1]);
+//		}).collect(Collectors.toList());
+
 		List<Actor> actors = actorNames.stream().map(actorName -> {
 			String[] names = actorName.split(" ");
-			return new Actor(0, names[0], names[1]);
+			if (names.length > 1) {
+				return new Actor(0, names[0], names[1]);
+			} else {
+				// Handle the case where there is no last name or provide a default value
+				return new Actor(0, names[0], "");
+			}
 		}).collect(Collectors.toList());
 
 		film.setActors(actors);
@@ -124,5 +135,15 @@ public class FilmController {
 			e.printStackTrace();
 		}
 		return "filmDetail";
+	}
+	
+	@ControllerAdvice
+	public class GlobalExceptionHandler {
+
+	    @ExceptionHandler(Exception.class)
+	    public String handleException(Exception e, Model model) {
+	        model.addAttribute("errorMessage", e.getMessage());
+	        return "errorPage";
+	    }
 	}
 }

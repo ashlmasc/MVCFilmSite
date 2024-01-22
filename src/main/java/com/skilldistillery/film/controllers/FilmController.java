@@ -48,11 +48,18 @@ public class FilmController {
 	public ModelAndView filmsSearch(@RequestParam("search") String keyword) {
 		ModelAndView mv = new ModelAndView();
 		List<Film> films = filmDAO.findFilmByKeyword(keyword);
+//		if (films.isEmpty()) {
+//			mv.setViewName("filmNotFound");
+//		}
+//		mv.addObject("films", films);
+//		mv.setViewName("filmsSearch");
 		if (films.isEmpty()) {
-			mv.setViewName("filmNotFound");
-		}
-		mv.addObject("films", films);
-		mv.setViewName("filmsSearch");
+			  mv.addObject("errorMessage", "No films found matching the keyword: " + keyword);
+		      mv.setViewName("errorPage");
+	    } else {
+	        mv.addObject("films", films);
+	        mv.setViewName("filmsSearch");
+	    }
 		return mv;
 	}
 

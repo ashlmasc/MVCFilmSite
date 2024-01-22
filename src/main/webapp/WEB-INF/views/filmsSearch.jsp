@@ -60,6 +60,4 @@ pageEncoding="UTF-8"%>
 	</c:forEach>
 
 </body>
-
-
 </html>

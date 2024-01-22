@@ -123,11 +123,6 @@ public class FilmController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return "filmDetail";
-
 	}
-
-//	
-
 }

@@ -13,22 +13,15 @@
 		<input type="text" name="id" /> <input type="submit"
 			value="Find Film" />
 	</form>
-	<!--CODE I ADDED  -->
 	<h3>Films By Search</h3>
 	<form action="filmsSearch.do">
 		<input type="text" name="search" /> <input type="submit"
 			value="Find Films By Search" />
 	</form>
-	
-<!--Mace Code  -->
+
 	<br>
-
 	<button onclick="window.location.href='/MVCFilmSite/filmForm.do'">Add New Film</button>
-
-<!-- END -->
 </body>
-
-
 </html>
 
 

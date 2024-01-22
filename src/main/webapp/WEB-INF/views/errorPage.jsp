@@ -7,6 +7,7 @@
 <body>
     <h2>Error</h2>
     <p>${errorMessage}</p>
+    
     <form action="." method="GET">
 		<input type="submit" value="Back to Home" />
 	</form>

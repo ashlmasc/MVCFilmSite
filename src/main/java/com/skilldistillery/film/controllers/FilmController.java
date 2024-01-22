@@ -37,13 +37,12 @@ public class FilmController {
 		Film film = filmDAO.findFilmById(filmId);
 		if (film == null) {
 			model.addAttribute("errorMessage", "No film found with ID " + filmId);
-			return "filmNotFound"; // added prefix/suffix in servlet so just names
+			return "filmNotFound";
 		}
 		model.addAttribute("film", film);
-		return "filmDetail"; // added prefix/suffix in servlet so just name
+		return "filmDetail";
 	}
 
-//	ADDED CODE
 	@RequestMapping(path = "filmsSearch.do")
 	public ModelAndView filmsSearch(@RequestParam("search") String keyword) {
 		ModelAndView mv = new ModelAndView();
@@ -56,22 +55,16 @@ public class FilmController {
 		return mv;
 	}
 
-	// Mace code:
-
 	@GetMapping("/filmForm.do")
 	public String showFilmForm(Model model) {
 		model.addAttribute("film", new Film());
 		return "filmForm";
 	}
 
-	// end of Mace code.
-
 	@PostMapping("/addFilm.do")
 	public ModelAndView addFilm(@ModelAttribute("film") Film film, BindingResult result, Model model, // Mace Code
 			@RequestParam(value = "actors", required = false) List<String> actorNames) throws SQLException { // end of
 																												// Mace
-																												// Code
-		// Validation logic
 		if (film.getTitle() == null || film.getTitle().isEmpty()) {
 			result.rejectValue("title", "error.film", "Title is required.");
 		}
@@ -90,18 +83,17 @@ public class FilmController {
 		return mv;
 	}
 
-	// new code for delete functionality
 	@PostMapping("/deleteFilm.do")
 	public String deleteFilm(@RequestParam("id") int filmId, Model model) throws SQLException {
 		boolean isDeleted = filmDAO.deleteFilm(filmId);
 		if (!isDeleted) {
-			model.addAttribute("deleteError", "Film could not be deleted.");
-			return "deleteStatus"; // JSP page for delete failure
+			model.addAttribute("message", "Film could not be deleted.");
+		} else {
+			model.addAttribute("message", "Film successfully deleted.");
 		}
-		return "home"; // Redirect to list of films after deletion
+		return "deleteStatus";
 	}
 
-	
 	@RequestMapping(path = "/updateFilm.do", method = RequestMethod.GET)
 	public String updateFilmForm(@RequestParam("id") int id, Model model) {
 		Film film = filmDAO.findFilmById(id);
@@ -110,17 +102,17 @@ public class FilmController {
 	}
 
 	@RequestMapping(path = "/filmDetail.do", method = RequestMethod.POST)
-	public String updateFilmFinally(@ModelAttribute("film")Film updatedFilm, Model model) {
+	public String updateFilmFinally(@ModelAttribute("film") Film updatedFilm, Model model) {
 		Film film = filmDAO.findFilmById(updatedFilm.getId());
-		
-		if(film != null) {
+
+		if (film != null) {
 			film.setTitle(updatedFilm.getTitle());
 			film.setDescription(updatedFilm.getDescription());
 			film.setRating(updatedFilm.getRating());
 			film.setLength(updatedFilm.getLength());
 			film.setLength(updatedFilm.getLength());
 		}
-		
+
 		try {
 			boolean newFilm = filmDAO.updateFilm(film);
 			if (newFilm) {
@@ -129,12 +121,11 @@ public class FilmController {
 				model.addAttribute("Failed to update film");
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return "filmDetail";
-		
+
 	}
 
 //	

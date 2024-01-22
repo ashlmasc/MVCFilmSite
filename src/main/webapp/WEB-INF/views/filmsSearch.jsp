@@ -39,7 +39,7 @@
 					<strong>Length:</strong> ${film.length} minutes
 				</p>
 				<p>
-					<strong>Replacement Cost:</strong> $${film.replacementCost}
+					<strong>Replacement Cost:</strong> ${film.replacementCost}
 				</p>
 				<p>
 					<strong>Rating:</strong> ${film.rating}

@@ -54,12 +54,12 @@ public class FilmController {
 //		mv.addObject("films", films);
 //		mv.setViewName("filmsSearch");
 		if (films.isEmpty()) {
-			  mv.addObject("errorMessage", "No films found matching the keyword: " + keyword);
-		      mv.setViewName("errorPage");
-	    } else {
-	        mv.addObject("films", films);
-	        mv.setViewName("filmsSearch");
-	    }
+			mv.addObject("errorMessage", "No films found matching the keyword: " + keyword);
+			mv.setViewName("errorPage");
+		} else {
+			mv.addObject("films", films);
+			mv.setViewName("filmsSearch");
+		}
 		return mv;
 	}
 
@@ -124,11 +124,20 @@ public class FilmController {
 		Film film = filmDAO.findFilmById(updatedFilm.getId());
 
 		if (film != null) {
+//			film.setTitle(updatedFilm.getTitle());
+//			film.setDescription(updatedFilm.getDescription());
+//			film.setRating(updatedFilm.getRating());
+//			film.setLength(updatedFilm.getLength());
+//			film.setLength(updatedFilm.getLength());
 			film.setTitle(updatedFilm.getTitle());
 			film.setDescription(updatedFilm.getDescription());
+			film.setReleaseYear(updatedFilm.getReleaseYear());
+			film.setLanguageId(updatedFilm.getLanguageId());
+			film.setRentalDuration(updatedFilm.getRentalDuration());
+			film.setRentalRate(updatedFilm.getRentalRate());
+			film.setLength(updatedFilm.getLength());
+			film.setReplacementCost(updatedFilm.getReplacementCost());
 			film.setRating(updatedFilm.getRating());
-			film.setLength(updatedFilm.getLength());
-			film.setLength(updatedFilm.getLength());
 		}
 
 		try {
@@ -143,14 +152,14 @@ public class FilmController {
 		}
 		return "filmDetail";
 	}
-	
+
 	@ControllerAdvice
 	public class GlobalExceptionHandler {
 
-	    @ExceptionHandler(Exception.class)
-	    public String handleException(Exception e, Model model) {
-	        model.addAttribute("errorMessage", e.getMessage());
-	        return "errorPage";
-	    }
+		@ExceptionHandler(Exception.class)
+		public String handleException(Exception e, Model model) {
+			model.addAttribute("errorMessage", e.getMessage());
+			return "errorPage";
+		}
 	}
 }

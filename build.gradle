@@ -1,6 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'war'
 
+java {
+  sourceCompatibility = '17'
+}
+
 war {
   archiveFileName = "${archivesBaseName}.war"
   destinationDirectory = file("./")      // Project root
